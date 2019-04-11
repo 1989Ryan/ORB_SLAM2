@@ -57,6 +57,8 @@ public:
     // Constructor for Monocular cameras.
     Frame(const cv::Mat &imGray, const double &timeStamp, ORBextractor* extractor,ORBVocabulary* voc, cv::Mat &K, cv::Mat &distCoef, const float &bf, const float &thDepth);
 
+    Frame(long unsigned int i);
+
     // Extract ORB on the image. 0 for left image and 1 for right image.
     void ExtractORB(int flag, const cv::Mat &im);
 
@@ -98,6 +100,16 @@ public:
     // Backprojects a keypoint (if stereo/depth info available) into 3D world coordinates.
     cv::Mat UnprojectStereo(const int &i);
 
+    void UpdatenNextId( unsigned int i );
+
+    void ClearBadDescriptor();//For debug use, I'm trying to draw those points on the FrameDrawer that does not fit the DescriptorDistance requirement.
+
+    void SaveBadDescriptor(const float &x, const float  &y, const float  &r);//For debug use, I'm trying to draw those points on the FrameDrawer that does not fit the DescriptorDistance requirement.
+
+    void ClearGoodDescriptor();//For debug use.
+    void SaveGoodDescriptor(const float &x, const float  &y, const float  &r);//For debug use.
+    vector<cv::Point3f> SendGoodKeyPointinfo();
+    
 public:
     // Vocabulary used for relocalization.
     ORBVocabulary* mpORBvocabulary;
@@ -149,11 +161,17 @@ public:
     // ORB descriptor, each row associated to a keypoint.
     cv::Mat mDescriptors, mDescriptorsRight;
 
+    //good keypoint in this frame, ready to send to ros system
+    vector<cv::Point3f> GoodKeyPointinfo;
+
     // MapPoints associated to keypoints, NULL pointer if no association.
     std::vector<MapPoint*> mvpMapPoints;
 
     // Flag to identify outlier associations.
     std::vector<bool> mvbOutlier;
+
+    // Flag to identify Discarded matches.(For debug use)
+    std::vector<bool> mvbDiscarded;
 
     // Keypoints are assigned to cells in a grid to reduce matching complexity when projecting MapPoints.
     static float mfGridElementWidthInv;
@@ -186,6 +204,11 @@ public:
     static float mnMaxY;
 
     static bool mbInitialComputations;
+
+    vector<cv::KeyPoint> mvBadDescriptor; //For debug use, I'm trying to draw those points on the FrameDrawer that does not fit the DescriptorDistance requirement.
+    vector<float> mvBadDescriptorRadius; //For debug use, I'm trying to draw those points on the FrameDrawer that does not fit the DescriptorDistance requirement.
+    vector<cv::KeyPoint> mvGoodDescriptor; //For debug use.
+    vector<float> mvGoodDescriptorRadius; //For debug use.
 
 
 private:

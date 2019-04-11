@@ -40,13 +40,17 @@ class MapPoint
 {
 public:
     MapPoint(const cv::Mat &Pos, KeyFrame* pRefKF, Map* pMap);
-    MapPoint(const cv::Mat &Pos,  Map* pMap, Frame* pFrame, const int &idxF);
+    MapPoint(const cv::Mat &Pos, Map* pMap, Frame* pFrame, const int &idxF);
+
+    MapPoint(const cv::Mat &Pos, Map* pMap);// When loading map, we redefine MapPoint
 
     void SetWorldPos(const cv::Mat &Pos);
     cv::Mat GetWorldPos();
 
     cv::Mat GetNormal();
     KeyFrame* GetReferenceKeyFrame();
+
+    KeyFrame* SetReferenceKeyFrame(KeyFrame* RFKF);// for map loading
 
     std::map<KeyFrame*,size_t> GetObservations();
     int Observations();
@@ -116,6 +120,10 @@ protected:
 
      // Position in absolute coordinates
      cv::Mat mWorldPos;
+
+     //TODO
+     //Enlabel the mappoint
+     //int label;
 
      // Keyframes observing the point and associated index in keyframe
      std::map<KeyFrame*,size_t> mObservations;
