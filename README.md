@@ -1,3 +1,21 @@
+# New ORB SLAM2 with ROS Data Port and Map Saving
+
+This new project is based on original ORB_SLAM2 project. We add ROS Data Port and map saving which will be easier for your own implementation. 
+
+## ROS Data Port
+To use our implementation, you have to install ROS Package.
+
+You can run the original command to raise the monocular example in ROS, and the node ``mono`` will publish the map cloud points and key points in current frame.
+
+You can visualize the map in Rviz. The map cloud point has it unique ID at ``PointCloud.channels[0].values``, which is associated with one key point in current frame.
+
+![Rviz Visualized ORB SLAM Map](https://github.com/1989Ryan/README_pictures/blob/master/research.png?raw=true)
+
+## Map Saving
+The map will be saved in ``mappointandkeyframe.bin``.
+
+**Below are original README file.**
+
 # ORB-SLAM2
 **Authors:** [Raul Mur-Artal](http://webdiis.unizar.es/~raulmur/), [Juan D. Tardos](http://webdiis.unizar.es/~jdtardos/), [J. M. M. Montiel](http://webdiis.unizar.es/~josemari/) and [Dorian Galvez-Lopez](http://doriangalvez.com/) ([DBoW2](https://github.com/dorian3d/DBoW2))
 
