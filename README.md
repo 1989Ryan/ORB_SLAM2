@@ -14,7 +14,7 @@ You can visualize the map in Rviz. The map cloud point has it unique ID at ``Poi
 ## Map Saving
 The map will be saved in ``mappointandkeyframe.bin``.
 
-**Below are original README file.**
+**Below is original README file.**
 
 # ORB-SLAM2
 **Authors:** [Raul Mur-Artal](http://webdiis.unizar.es/~raulmur/), [Juan D. Tardos](http://webdiis.unizar.es/~jdtardos/), [J. M. M. Montiel](http://webdiis.unizar.es/~josemari/) and [Dorian Galvez-Lopez](http://doriangalvez.com/) ([DBoW2](https://github.com/dorian3d/DBoW2))
