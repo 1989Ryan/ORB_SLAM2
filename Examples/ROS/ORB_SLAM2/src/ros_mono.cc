@@ -56,7 +56,7 @@ public:
     {
         pub_ = n_.advertise<sensor_msgs::PointCloud>("/mappoint", 1000);
         pub_2 = n_.advertise<sensor_msgs::PointCloud>("/KeyPoint",1000);
-	pub_3 = n_.advertise<geometry_msgs::Path>("/trajectory", 1000);
+	pub_3 = n_.advertise<nav_msgs::Path>("/trajectory", 1000);
         sub_ = n_.subscribe("/camera/image_raw", 1, &ImageGrabber::GrabImage, this);
     }
 
