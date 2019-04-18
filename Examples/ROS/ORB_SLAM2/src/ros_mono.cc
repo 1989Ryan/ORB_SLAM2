@@ -25,6 +25,8 @@
 #include<chrono>
 #include <sensor_msgs/PointCloud.h>
 #include <geometry_msgs/Point.h>
+#include <geometry_msgs/Pose.h>
+#include <nav_msgs/Path.h>
 
 
 #include<mutex>
@@ -53,7 +55,8 @@ public:
     void pubandsub()
     {
         pub_ = n_.advertise<sensor_msgs::PointCloud>("/mappoint", 1000);
-        pub_2 = n_.advertise<sensor_msgs::PointCloud>("/KeyPoint",1);
+        pub_2 = n_.advertise<sensor_msgs::PointCloud>("/KeyPoint",1000);
+	pub_3 = n_.advertise<geometry_msgs::Path>("/trajectory", 1000);
         sub_ = n_.subscribe("/camera/image_raw", 1, &ImageGrabber::GrabImage, this);
     }
 
@@ -63,9 +66,11 @@ private:
     ros::NodeHandle n_;
     ros::Publisher pub_;
     ros::Publisher pub_2;
+    ros::Publisher pub_3;
     ros::Subscriber sub_;
     sensor_msgs::PointCloud mpt;
     sensor_msgs::PointCloud kpt;
+    nav_msgs::Path path;
     int count;
 };
 
@@ -118,6 +123,9 @@ void ImageGrabber::GrabImage(const sensor_msgs::ImageConstPtr& msg)
     {
         vector<cv::Mat> mppos = mpSLAM->GetTrackedMapPointsPose();
         vector<cv::Point3f> key = mpSLAM -> GetGoodKeyPoints();
+        vector<cv::Mat> tjry = mpSLAM->GetPose();
+	path.header.stamp=ros::Time::now();
+        path.header.frame_id="sensor_frame";
         int i = 0;
         int num_points = mppos.size();
         mpt.header.stamp = ros::Time::now();
@@ -127,6 +135,21 @@ void ImageGrabber::GrabImage(const sensor_msgs::ImageConstPtr& msg)
         mpt.channels.resize(1);
         mpt.channels[0].name = "rgb";
         mpt.channels[0].values.resize(num_points);
+        geometry_msgs::PoseStamped this_pose_stamped;
+        for(auto t:tjry)
+        {
+            this_pose_stamped.pose.position.x = t.at<float>(0);
+            this_pose_stamped.pose.position.y = t.at<float>(1);
+            this_pose_stamped.pose.position.z = t.at<float>(2);
+            this_pose_stamped.pose.orientation.x = t.at<float>(3);
+            this_pose_stamped.pose.orientation.y = t.at<float>(4);
+            this_pose_stamped.pose.orientation.z = t.at<float>(5);
+            this_pose_stamped.pose.orientation.w = t.at<float>(6);
+
+            this_pose_stamped.header.stamp=path.header.stamp;
+            this_pose_stamped.header.frame_id="sensor_frame";
+            path.poses.push_back(this_pose_stamped);
+        }
         for(auto mp: mppos)
         {
             mpt.points[i].x = mp.at<float>(0);
@@ -154,5 +177,6 @@ void ImageGrabber::GrabImage(const sensor_msgs::ImageConstPtr& msg)
         i = 0;
         pub_.publish(mpt);
         pub_2.publish(kpt);
+	pub_3.publish(path);
     }
 }
