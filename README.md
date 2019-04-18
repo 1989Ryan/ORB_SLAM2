@@ -1,11 +1,12 @@
-# New ORB SLAM2 with ROS Data Port and Map Saving
+# New ORB SLAM2 with ROS Data Port and Map Saving　
+# ORB_SLAM 魔改版
 
 This new project is based on original ORB_SLAM2 project. We add ROS Data Port and map saving which will be easier for your own implementation. 
 
 ## ROS Data Port
 To use our implementation, you have to install ROS Package.
 
-You can run the original command to raise the monocular example in ROS, and the node ``mono`` will publish the map cloud points and key points in current frame.
+You can run the original command to raise the monocular example in ROS, and the node ``mono`` will publish the map cloud points, key points in current frame and trajectory.
 
 You can visualize the map in Rviz. The map cloud point has it unique ID at ``PointCloud.channels[0].values``, which is associated with one key point in current frame.
 
