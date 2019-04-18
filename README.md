@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-=======
+
 # New ORB SLAM2 with ROS Data Port and Map Saving　
 # ORB_SLAM 魔改版
 
