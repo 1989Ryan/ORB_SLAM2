@@ -31,7 +31,7 @@
 
 using namespace std;
 
-void LoadImages(const string &strSequence, vector<string> &vstrImageFilenames,
+void LoadRoverImages(const string &strSequence, vector<string> &vstrImageFilenames,
                 vector<double> &vTimestamps);
 
 int main(int argc, char **argv)
@@ -46,7 +46,7 @@ int main(int argc, char **argv)
     // Retrieve paths to images
     vector<string> vstrImageFilenames;
     vector<double> vTimestamps;
-    LoadImages(string(argv[3]), vstrImageFilenames, vTimestamps);
+    LoadRoverImages(string(argv[3]), vstrImageFilenames, vTimestamps);
 
     int nImages = vstrImageFilenames.size();
 
@@ -63,9 +63,25 @@ int main(int argc, char **argv)
 
     // Main loop
     cv::Mat im;
+    bool man_insert;
+    char type_in;
+    cout << "Do you want to manually feed in the images? (y/n)" << endl;
+    cin >> type_in;
+    if(type_in == 'Y' || type_in == 'y'){  
+        man_insert = true;
+    }
+    else{
+        man_insert = false;
+    }
+
     for(int ni=0; ni<nImages; ni++)
     {
         // sleep(1);
+        if(man_insert){
+            cout << "Please type something in so that we can load another image." << endl;
+            cin >> type_in;
+        }
+
         // Read image from file
         im = cv::imread(vstrImageFilenames[ni],CV_LOAD_IMAGE_UNCHANGED);
         double tframe = vTimestamps[ni];
@@ -131,15 +147,15 @@ int main(int argc, char **argv)
     cin >> IsSaveMap;  
     if(IsSaveMap == 'Y' || IsSaveMap == 'y')  
         SLAM.SaveMap("MapPointandKeyFrame.bin");
-	SLAM.SavePoint("MapPoint.txt");
 
     return 0;
 }
 
-void LoadImages(const string &strPathToSequence, vector<string> &vstrImageFilenames, vector<double> &vTimestamps)
+void LoadRoverImages(const string &strPathToSequence, vector<string> &vstrImageFilenames, vector<double> &vTimestamps)
 {
     ifstream fTimes;
-    string strPathTimeFile = strPathToSequence + "/times.txt";
+    cout << "Now trying to load left images." << endl;
+    string strPathTimeFile = strPathToSequence + "/left.txt";
     fTimes.open(strPathTimeFile.c_str());
     while(!fTimes.eof())
     {
@@ -155,7 +171,7 @@ void LoadImages(const string &strPathToSequence, vector<string> &vstrImageFilena
         }
     }
 
-    string strPrefixLeft = strPathToSequence + "/image_0/";
+    string strPrefixLeft = strPathToSequence + "/left/";
 
     const int nTimes = vTimestamps.size();
     vstrImageFilenames.resize(nTimes);
@@ -163,7 +179,8 @@ void LoadImages(const string &strPathToSequence, vector<string> &vstrImageFilena
     for(int i=0; i<nTimes; i++)
     {
         stringstream ss;
-        ss << setfill('0') << setw(6) << i;
+        ss << setiosflags(ios::fixed) << setprecision(6) << vTimestamps[i];
+        // ss << setfill('0') << setw(6) << i;
         vstrImageFilenames[i] = strPrefixLeft + ss.str() + ".png";
     }
 }
