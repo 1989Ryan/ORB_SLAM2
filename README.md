@@ -11,7 +11,7 @@ You can run the original command to raise the monocular example in ROS, and the 
 
 You can visualize the map in Rviz. The map cloud point has it unique ID at ``PointCloud.channels[0].values``, which is associated with one key point in current frame.
 
-![Rviz Visualized ORB SLAM Map](https://github.com/1989Ryan/README_pictures/blob/master/research.png?raw=true)
+![Rviz Visualized ORB SLAM Map](https://github.com/1989Ryan/ORB_SLAM2_ROS/blob/master/maphaha.png?raw=true)
 
 ## Map Saving
 The map will be saved in ``mappointandkeyframe.bin``.
